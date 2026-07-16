@@ -1,0 +1,10 @@
+node_modules/
+
+# Playwright output
+e2e/test-results/
+e2e/playwright-report/
+e2e/blob-report/
+
+# OS / editor noise
+.DS_Store
+*.log

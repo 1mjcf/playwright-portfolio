@@ -1,0 +1,13 @@
+{
+  "name": "finbank-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FinBank — a small demo online-banking app used as a Playwright test target",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinBank — Dashboard</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <span class="brand">FinBank</span>
+    <nav>
+      <a href="/dashboard" class="active">Dashboard</a>
+      <a href="/transfer">Transfer</a>
+    </nav>
+    <div class="user-area">
+      <span data-testid="user-name"></span>
+      <button type="button" data-testid="logout-button">Log out</button>
+    </div>
+  </header>
+  <main class="page">
+    <section>
+      <h2>Accounts</h2>
+      <div id="accounts-grid" class="accounts-grid"></div>
+    </section>
+    <div class="columns">
+      <section>
+        <h2>Recent transactions</h2>
+        <table>
+          <thead>
+            <tr><th>Date</th><th>Description</th><th class="amount">Amount</th></tr>
+          </thead>
+          <tbody id="transactions-body"></tbody>
+        </table>
+      </section>
+      <aside class="card">
+        <h2>Exchange rates</h2>
+        <p class="muted hidden" data-testid="rates-loading">Loading rates…</p>
+        <p class="error hidden" data-testid="rates-error" role="alert"></p>
+        <ul id="rates-list" class="rates-list"></ul>
+      </aside>
+    </div>
+  </main>
+  <script src="/js/api.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinBank — Sign in</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="auth-page">
+  <main class="auth-card">
+    <h1>FinBank</h1>
+    <p class="subtitle">Demo online banking</p>
+    <form id="login-form" data-testid="login-form" novalidate>
+      <label for="username">Username</label>
+      <input id="username" name="username" autocomplete="username" data-testid="username-input">
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" data-testid="password-input">
+      <button type="submit" data-testid="login-submit">Sign in</button>
+      <p class="error hidden" data-testid="login-error" role="alert"></p>
+    </form>
+    <p class="hint">Demo credentials: <code>demo</code> / <code>demo123</code></p>
+  </main>
+  <script src="/js/api.js"></script>
+  <script src="/js/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+services:
+  app:
+    build: ./app
+    image: finbank-app
+    ports:
+      - "3000:3000"
+    environment:
+      # Enables POST /api/test/reset (per-session data reset) for the e2e suite.
+      # Never set this in a real production deployment.
+      ENABLE_TEST_ROUTES: "true"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 3s

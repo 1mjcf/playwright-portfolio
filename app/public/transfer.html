@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinBank — Transfer</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <span class="brand">FinBank</span>
+    <nav>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/transfer" class="active">Transfer</a>
+    </nav>
+    <div class="user-area">
+      <span data-testid="user-name"></span>
+      <button type="button" data-testid="logout-button">Log out</button>
+    </div>
+  </header>
+  <main class="page">
+    <h2>Transfer funds</h2>
+    <div class="card transfer-card">
+      <form id="transfer-form" data-testid="transfer-form">
+        <label for="from-account">From account</label>
+        <select id="from-account" data-testid="from-account-select"></select>
+        <label for="to-account">To account</label>
+        <select id="to-account" data-testid="to-account-select"></select>
+        <label for="amount">Amount</label>
+        <input id="amount" type="number" step="0.01" required data-testid="amount-input">
+        <label for="description">Description (optional)</label>
+        <input id="description" data-testid="description-input">
+        <button type="submit" data-testid="transfer-submit">Send transfer</button>
+      </form>
+      <p class="alert success hidden" data-testid="transfer-success" role="status"></p>
+      <p class="alert failure hidden" data-testid="transfer-error" role="alert"></p>
+    </div>
+  </main>
+  <script src="/js/api.js"></script>
+  <script src="/js/transfer.js"></script>
+</body>
+</html>
