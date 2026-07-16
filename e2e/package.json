@@ -8,11 +8,15 @@
     "test:smoke": "playwright test --grep @smoke",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
-    "report": "playwright show-report"
+    "report": "playwright show-report",
+    "report:oracle": "playwright-oracle-reporter open"
   },
   "devDependencies": {
     "@playwright/test": "^1.54.1",
     "@types/node": "^24.0.0",
     "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "playwright-oracle-reporter": "^1.1.13"
   }
 }

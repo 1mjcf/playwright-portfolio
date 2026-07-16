@@ -33,32 +33,55 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
+      # Persist Oracle history across runs so flaky / recurring-failure
+      # detection has prior runs to compare against.
+      - name: Restore Oracle history
+        uses: actions/cache@v4
+        with:
+          path: e2e/.playwright-oracle-history
+          key: oracle-history-${{ github.ref_name }}-${{ github.run_id }}
+          restore-keys: |
+            oracle-history-${{ github.ref_name }}-
+            oracle-history-
+
       # Fast, critical-path checks act as the deployment gate: if these fail,
       # the full regression run never starts.
       - name: Smoke tests (deployment gate)
         run: npx playwright test --grep "@smoke"
         env:
           BASE_URL: http://localhost:3000
+          PW_ORACLE_OUTPUT_DIR: playwright-oracle-report-smoke
+          PW_ORACLE_HISTORY_DIR: .playwright-oracle-history
 
-      - name: Upload smoke report
+      - name: Publish smoke report summary
+        if: always()
+        run: node scripts/oracle-summary.mjs playwright-oracle-report-smoke "Smoke tests" oracle-report-smoke
+
+      - name: Upload smoke Oracle report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-smoke
-          path: e2e/playwright-report
+          name: oracle-report-smoke
+          path: e2e/playwright-oracle-report-smoke
           retention-days: 14
 
       - name: Full regression suite
         run: npx playwright test --grep-invert "@smoke"
         env:
           BASE_URL: http://localhost:3000
+          PW_ORACLE_OUTPUT_DIR: playwright-oracle-report-regression
+          PW_ORACLE_HISTORY_DIR: .playwright-oracle-history
 
-      - name: Upload regression report
+      - name: Publish regression report summary
+        if: always()
+        run: node scripts/oracle-summary.mjs playwright-oracle-report-regression "Regression suite" oracle-report-regression
+
+      - name: Upload regression Oracle report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-regression
-          path: e2e/playwright-report
+          name: oracle-report-regression
+          path: e2e/playwright-oracle-report-regression
           retention-days: 14
 
       - name: Show app logs on failure
