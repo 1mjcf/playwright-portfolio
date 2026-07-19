@@ -14,16 +14,16 @@ jobs:
         working-directory: e2e
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Build and start the app (Docker)
         working-directory: .
         run: docker compose up --build --detach --wait
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
           cache-dependency-path: e2e/package-lock.json
 
@@ -36,7 +36,7 @@ jobs:
       # Persist Oracle history across runs so flaky / recurring-failure
       # detection has prior runs to compare against.
       - name: Restore Oracle history
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: e2e/.playwright-oracle-history
           key: oracle-history-${{ github.ref_name }}-${{ github.run_id }}
@@ -59,7 +59,7 @@ jobs:
 
       - name: Upload smoke Oracle report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: oracle-report-smoke
           path: e2e/playwright-oracle-report-smoke
@@ -78,7 +78,7 @@ jobs:
 
       - name: Upload regression Oracle report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: oracle-report-regression
           path: e2e/playwright-oracle-report-regression
