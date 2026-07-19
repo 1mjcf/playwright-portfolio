@@ -3,7 +3,8 @@
 const express = require('express');
 const crypto = require('node:crypto');
 const path = require('node:path');
-const { USERS, BASE_RATES, seedAccounts, seedTransactions } = require('./data/seed');
+const { BASE_RATES } = require('./data/seed');
+const { createSessionDb, authenticate } = require('./data/db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,19 +17,18 @@ app.use(express.json());
 // workers (each holding their own token) never interfere with each other.
 const sessions = new Map();
 
-const newDb = () => ({ accounts: seedAccounts(), transactions: seedTransactions() });
 const round2 = (n) => Math.round(n * 100) / 100;
 
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body ?? {};
-  const user = USERS.find((u) => u.username === username && u.password === password);
+  const user = authenticate(username, password);
   if (!user) return res.status(401).json({ error: 'Invalid username or password' });
 
   const token = crypto.randomUUID();
-  sessions.set(token, { username: user.username, displayName: user.displayName, db: newDb() });
-  res.json({ token, user: { username: user.username, displayName: user.displayName } });
+  sessions.set(token, { username: user.username, displayName: user.displayName, db: createSessionDb() });
+  res.json({ token, user });
 });
 
 function auth(req, res, next) {
@@ -39,18 +39,18 @@ function auth(req, res, next) {
   next();
 }
 
-app.get('/api/accounts', auth, (req, res) => res.json(req.session.db.accounts));
+app.get('/api/accounts', auth, (req, res) => res.json(req.session.db.accounts.all()));
 
 app.get('/api/transactions', auth, (req, res) => {
-  const sorted = [...req.session.db.transactions].sort((a, b) => b.date.localeCompare(a.date));
+  const sorted = req.session.db.transactions.sort((a, b) => b.date.localeCompare(a.date));
   res.json(sorted);
 });
 
 app.post('/api/transfers', auth, (req, res) => {
   const { fromAccountId, toAccountId, amount, description } = req.body ?? {};
   const { db } = req.session;
-  const from = db.accounts.find((a) => a.id === fromAccountId);
-  const to = db.accounts.find((a) => a.id === toAccountId);
+  const from = db.accounts.find(fromAccountId);
+  const to = db.accounts.find(toAccountId);
   const value = Number(amount);
 
   if (!from || !to) return res.status(404).json({ error: 'Account not found' });
@@ -58,19 +58,17 @@ app.post('/api/transfers', auth, (req, res) => {
   if (!Number.isFinite(value) || value <= 0) return res.status(422).json({ error: 'Amount must be greater than zero' });
   if (value > from.balance) return res.status(422).json({ error: 'Insufficient funds' });
 
-  from.balance = round2(from.balance - value);
-  to.balance = round2(to.balance + value);
+  db.accounts.update(from.id, { balance: round2(from.balance - value) });
+  db.accounts.update(to.id, { balance: round2(to.balance + value) });
 
   const now = new Date().toISOString();
   const transferId = `txn-${crypto.randomUUID().slice(0, 8)}`;
-  db.transactions.push(
-    { id: `${transferId}-out`, date: now, accountId: from.id, description: description || `Transfer to ${to.name}`, amount: -value, type: 'debit' },
-    { id: `${transferId}-in`, date: now, accountId: to.id, description: description || `Transfer from ${from.name}`, amount: value, type: 'credit' },
-  );
+  db.transactions.insert({ id: `${transferId}-out`, date: now, accountId: from.id, description: description || `Transfer to ${to.name}`, amount: -value, type: 'debit' });
+  db.transactions.insert({ id: `${transferId}-in`, date: now, accountId: to.id, description: description || `Transfer from ${from.name}`, amount: value, type: 'credit' });
 
   res.status(201).json({
     transfer: { id: transferId, fromAccountId, toAccountId, amount: value, date: now },
-    accounts: db.accounts,
+    accounts: db.accounts.all(),
   });
 });
 
@@ -90,7 +88,7 @@ app.get('/api/rates', (_req, res) => {
 if (ENABLE_TEST_ROUTES) {
   // Resets only the calling session's sandbox — parallel workers stay isolated.
   app.post('/api/test/reset', auth, (req, res) => {
-    req.session.db = newDb();
+    req.session.db = createSessionDb();
     res.json({ ok: true });
   });
 }
