@@ -127,6 +127,18 @@ td.debit { color: var(--red); }
 .rates-list li:last-child { border-bottom: none; }
 .rates-list li span:last-child { font-variant-numeric: tabular-nums; }
 
+/* ---------- Transactions ---------- */
+.toolbar { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
+.toolbar label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.8rem; color: var(--muted); }
+.toolbar input, .toolbar select { width: auto; min-width: 200px; padding: 0.45rem 0.6rem; font-size: 0.9rem; }
+
+th.sortable { cursor: pointer; user-select: none; }
+th.sortable:hover { color: var(--text); }
+th.sortable[data-dir="asc"]::after { content: " ▲"; font-size: 0.7em; }
+th.sortable[data-dir="desc"]::after { content: " ▼"; font-size: 0.7em; }
+
+.empty-row { padding: 1rem; text-align: center; }
+
 .transfer-card { max-width: 460px; }
 .alert { margin-top: 1rem; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.9rem; }
 .alert.success { background: rgba(74, 222, 128, 0.12); color: var(--green); border: 1px solid rgba(74, 222, 128, 0.4); }

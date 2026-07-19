@@ -97,6 +97,7 @@ const publicDir = path.join(__dirname, 'public');
 app.use(express.static(publicDir));
 app.get('/', (_req, res) => res.sendFile(path.join(publicDir, 'login.html')));
 app.get('/dashboard', (_req, res) => res.sendFile(path.join(publicDir, 'dashboard.html')));
+app.get('/transactions', (_req, res) => res.sendFile(path.join(publicDir, 'transactions.html')));
 app.get('/transfer', (_req, res) => res.sendFile(path.join(publicDir, 'transfer.html')));
 
 app.listen(PORT, () => {

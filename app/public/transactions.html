@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinBank — Transactions</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <span class="brand">FinBank</span>
+    <nav>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/transactions" class="active">Transactions</a>
+      <a href="/transfer">Transfer</a>
+    </nav>
+    <div class="user-area">
+      <span data-testid="user-name"></span>
+      <button type="button" data-testid="logout-button">Log out</button>
+    </div>
+  </header>
+  <main class="page">
+    <h2>Transaction history</h2>
+    <div class="toolbar" data-testid="transactions-toolbar">
+      <label>
+        Search
+        <input type="search" id="filter-search" placeholder="Description…" data-testid="filter-search">
+      </label>
+      <label>
+        Account
+        <select id="filter-account" data-testid="filter-account"></select>
+      </label>
+      <label>
+        Type
+        <select id="filter-type" data-testid="filter-type">
+          <option value="all">All</option>
+          <option value="credit">Credit</option>
+          <option value="debit">Debit</option>
+        </select>
+      </label>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th class="sortable" data-sort="date" data-testid="sort-date">Date</th>
+          <th>Account</th>
+          <th>Description</th>
+          <th class="amount sortable" data-sort="amount" data-testid="sort-amount">Amount</th>
+        </tr>
+      </thead>
+      <tbody id="transactions-body"></tbody>
+    </table>
+    <p class="muted empty-row hidden" data-testid="transactions-empty">No transactions match your filters.</p>
+  </main>
+  <script src="/js/api.js"></script>
+  <script src="/js/transactions.js"></script>
+</body>
+</html>
