@@ -5,6 +5,7 @@ import { CREDENTIALS } from '../helpers/testData';
 import { LoginPage } from '../pages/LoginPage';
 import { DashboardPage } from '../pages/DashboardPage';
 import { TransferPage } from '../pages/TransferPage';
+import { TransactionsPage } from '../pages/TransactionsPage';
 
 interface WorkerAuth {
   storageStatePath: string;
@@ -15,6 +16,7 @@ interface TestFixtures {
   loginPage: LoginPage;
   dashboardPage: DashboardPage;
   transferPage: TransferPage;
+  transactionsPage: TransactionsPage;
   /** APIRequestContext pre-authenticated with this worker's token. */
   api: APIRequestContext;
   /** Auto fixture: resets this worker's server-side sandbox before every test. */
@@ -98,6 +100,10 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
 
   transferPage: async ({ page }, use) => {
     await use(new TransferPage(page));
+  },
+
+  transactionsPage: async ({ page }, use) => {
+    await use(new TransactionsPage(page));
   },
 });
 

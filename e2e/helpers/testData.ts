@@ -9,6 +9,15 @@ export const SEED_ACCOUNTS = {
 
 export const SEED_TRANSACTION_COUNT = 5;
 
+/** Mirrors app/data/seed.js — seeded transactions, newest first (the order the API returns). */
+export const SEED_TRANSACTIONS = {
+  dinner: { description: 'Dinner — Harbour Bistro', amount: -96.8, type: 'debit', accountId: SEED_ACCOUNTS.checking.id },
+  interest: { description: 'Interest payment', amount: 38.62, type: 'credit', accountId: SEED_ACCOUNTS.savings.id },
+  groceries: { description: 'Groceries — FreshMart', amount: -212.4, type: 'debit', accountId: SEED_ACCOUNTS.checking.id },
+  rent: { description: 'Rent — July', amount: -1850, type: 'debit', accountId: SEED_ACCOUNTS.checking.id },
+  salary: { description: 'Salary — Acme Corp', amount: 4200, type: 'credit', accountId: SEED_ACCOUNTS.checking.id },
+} as const;
+
 /** Formats a number exactly the way the app does, so assertions stay readable. */
 export function aud(amount: number): string {
   return new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }).format(amount);

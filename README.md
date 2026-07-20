@@ -39,7 +39,7 @@ docker compose up --build          # http://localhost:3000
 
 ## The test suite (`e2e/`)
 
-21 tests across UI, network-mocking, and API layers. Techniques on display:
+30 tests across UI, network-mocking, and API layers. Techniques on display:
 
 | Technique | Where |
 |---|---|
@@ -53,6 +53,7 @@ docker compose up --build          # http://localhost:3000
 | Test tagging (`@smoke`) for suite slicing | all specs |
 | User-facing locators (`getByRole`, `getByLabel`, `getByTestId`) and web-first assertions | everywhere |
 | Fully parallel execution, trace/screenshot on failure, retries in CI | `playwright.config.ts` |
+| AI-assisted test authoring via Playwright MCP + Test Agents | `e2e/specs/`, `e2e/.claude/agents/`, `e2e/docs/mcp-workflow.md` |
 
 ### Run the tests
 
@@ -74,6 +75,21 @@ Docker container instead (what CI does):
 docker compose up --build --detach --wait
 cd e2e && BASE_URL=http://localhost:3000 CI=true npx playwright test
 ```
+
+## AI-assisted authoring (Playwright MCP)
+
+The `/transactions` suite was authored with **Playwright MCP** and the built-in **Test Agents**
+(planner → generator → healer), then refined by hand into the Page Object Model style used
+everywhere else. Playwright MCP is a dev-time tool: an AI agent drives a real browser over the
+page's accessibility tree to explore, author, and self-heal tests. It is **not** a runtime
+dependency — CI still runs plain `playwright test`; the committed plan, page object, and spec are
+the durable output.
+
+```bash
+cd e2e && npx playwright init-agents --loop=claude   # scaffolds .claude/agents/ + .mcp.json
+```
+
+Full write-up, including how to reproduce the loop: [`e2e/docs/mcp-workflow.md`](e2e/docs/mcp-workflow.md).
 
 ## CI (`.github/workflows/ci.yml`)
 
@@ -98,14 +114,20 @@ portfolio/
 │   └── public/                 # Login, dashboard, transfer UI
 ├── e2e/                        # Playwright test suite (TypeScript)
 │   ├── playwright.config.ts
+│   ├── .mcp.json               # Playwright MCP server (for the Test Agents)
+│   ├── .claude/agents/         # Planner / generator / healer agent definitions
+│   ├── specs/                  # Human-readable test plans (planner output)
+│   ├── docs/mcp-workflow.md    # How Playwright MCP + Test Agents were used
 │   ├── fixtures/test.ts        # Worker auth, API client, auto-reset, page objects
-│   ├── pages/                  # BasePage, LoginPage, DashboardPage, TransferPage
+│   ├── pages/                  # BasePage, LoginPage, DashboardPage, TransferPage, TransactionsPage
 │   ├── mocks/rates.ts          # Canned FX-provider responses
 │   ├── helpers/testData.ts     # Seed constants + currency formatter
 │   └── tests/
+│       ├── seed.spec.ts        # Environment bootstrap for the Test Agents
 │       ├── login.spec.ts
 │       ├── dashboard.spec.ts
 │       ├── transfer.spec.ts
+│       ├── transactions.spec.ts  # Authored via Playwright MCP + Test Agents
 │       ├── rates-mock.spec.ts  # Network-level service mocking
 │       └── api/transfers-api.spec.ts
 ├── docker-compose.yml
