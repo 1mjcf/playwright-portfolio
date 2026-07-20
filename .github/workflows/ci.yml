@@ -59,7 +59,7 @@ jobs:
 
       - name: Upload smoke Oracle report
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: oracle-report-smoke
           path: e2e/playwright-oracle-report-smoke
@@ -78,7 +78,7 @@ jobs:
 
       - name: Upload regression Oracle report
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: oracle-report-regression
           path: e2e/playwright-oracle-report-regression
