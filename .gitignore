@@ -12,3 +12,11 @@ e2e/.playwright-oracle-history/
 # OS / editor noise
 .DS_Store
 *.log
+.vscode/
+.idea/
+*.tsbuildinfo
+
+# Local env files (should never be committed)
+.env
+.env.*
+!.env.example

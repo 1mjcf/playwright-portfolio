@@ -2,6 +2,7 @@
   "name": "finbank-app",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "description": "FinBank — a small demo online-banking app used as a Playwright test target",
   "main": "server.js",
   "scripts": {

@@ -11,11 +11,20 @@ async function loadAccounts() {
     const card = document.createElement('article');
     card.className = 'card account-card';
     card.dataset.testid = 'account-card';
-    card.innerHTML = `
-      <h3>${account.name}</h3>
-      <p class="account-number">${account.number}</p>
-      <p class="balance" data-testid="account-balance">${formatMoney(account.balance)}</p>
-    `;
+
+    const nameEl = document.createElement('h3');
+    nameEl.textContent = account.name;
+
+    const numberEl = document.createElement('p');
+    numberEl.className = 'account-number';
+    numberEl.textContent = account.number;
+
+    const balanceEl = document.createElement('p');
+    balanceEl.className = 'balance';
+    balanceEl.dataset.testid = 'account-balance';
+    balanceEl.textContent = formatMoney(account.balance);
+
+    card.append(nameEl, numberEl, balanceEl);
     grid.appendChild(card);
   }
 }
@@ -28,11 +37,18 @@ async function loadTransactions() {
     const row = document.createElement('tr');
     row.dataset.testid = 'transaction-row';
     const kind = txn.amount >= 0 ? 'credit' : 'debit';
-    row.innerHTML = `
-      <td>${new Date(txn.date).toLocaleDateString('en-AU')}</td>
-      <td>${txn.description}</td>
-      <td class="amount ${kind}">${formatMoney(txn.amount)}</td>
-    `;
+
+    const dateCell = document.createElement('td');
+    dateCell.textContent = new Date(txn.date).toLocaleDateString('en-AU');
+
+    const descCell = document.createElement('td');
+    descCell.textContent = txn.description;
+
+    const amountCell = document.createElement('td');
+    amountCell.className = `amount ${kind}`;
+    amountCell.textContent = formatMoney(txn.amount);
+
+    row.append(dateCell, descCell, amountCell);
     tbody.appendChild(row);
   }
 }
