@@ -41,12 +41,21 @@ function render() {
     const row = document.createElement('tr');
     row.dataset.testid = 'transaction-row';
     const kind = txn.amount >= 0 ? 'credit' : 'debit';
-    row.innerHTML = `
-      <td>${new Date(txn.date).toLocaleDateString('en-AU')}</td>
-      <td>${accountNames.get(txn.accountId) || txn.accountId}</td>
-      <td>${txn.description}</td>
-      <td class="amount ${kind}">${formatMoney(txn.amount)}</td>
-    `;
+
+    const dateCell = document.createElement('td');
+    dateCell.textContent = new Date(txn.date).toLocaleDateString('en-AU');
+
+    const accountCell = document.createElement('td');
+    accountCell.textContent = accountNames.get(txn.accountId) || txn.accountId;
+
+    const descCell = document.createElement('td');
+    descCell.textContent = txn.description;
+
+    const amountCell = document.createElement('td');
+    amountCell.className = `amount ${kind}`;
+    amountCell.textContent = formatMoney(txn.amount);
+
+    row.append(dateCell, accountCell, descCell, amountCell);
     tbody.appendChild(row);
   }
 

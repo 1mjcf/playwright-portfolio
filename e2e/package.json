@@ -2,6 +2,7 @@
   "name": "finbank-e2e",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "description": "Playwright end-to-end and API tests for the FinBank demo app",
   "scripts": {
     "test": "playwright test",
