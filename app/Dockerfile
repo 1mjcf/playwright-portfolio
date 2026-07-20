@@ -1,5 +1,5 @@
 # Small production image: install only runtime deps, run as non-root.
-FROM node:22-alpine
+FROM node:26-alpine
 
 ENV NODE_ENV=production
 WORKDIR /usr/src/app
