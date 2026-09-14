@@ -13,7 +13,7 @@
     "report:oracle": "playwright-oracle-reporter open"
   },
   "devDependencies": {
-    "@playwright/test": "^1.56.0",
+    "@playwright/test": "^1.63.0",
     "@types/node": "^24.0.0",
     "typescript": "^5.5.4"
   },
